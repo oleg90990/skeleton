@@ -8,7 +8,7 @@ export default class Client
   private client!: Socket;
 
   connect(callback: Function) {
-    this.client = io("ws://localhost:3000", {
+    this.client = io("ws://46.17.40.175:3000/", {
       reconnectionDelayMax: 1000
     })
 
