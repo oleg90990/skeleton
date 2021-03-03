@@ -12,6 +12,7 @@ import {
 import Skeleton from '../Skeleton'
 
 class Player extends GameObjects.Image {
+    public line: any
     public motion: AnimsEnum
     public dir: DirectionEnum
     public info: PlayerInfo
@@ -26,6 +27,11 @@ class Player extends GameObjects.Image {
 
         this.f = this.animation.startFrame
         this.scene.time.delayedCall(100, this.changeFrame, [], this)
+
+        this.line = this.scene.add.line(
+          0, 0, 60, 0, 0, 0,
+          0xff0000
+        );
     }
 
     get animation() {
@@ -62,6 +68,24 @@ class Player extends GameObjects.Image {
         this.info.powerArea,
         this.info.powerArea,
       )
+    }
+
+    public updateLine() {
+      const widthLine = 60 * this.info.health / 100;
+
+      this.line.x = this.x - 0
+      this.line.y = this.y - 40
+      this.line.setTo(widthLine < 0 ? 0 : widthLine, 0, 0, 0);
+    }
+
+    public reset() {
+      const any: any = this.scene
+      const pos = any.getRandPosition()
+      this.x = pos.x
+      this.y = pos.y
+      this.setAnimation(AnimsEnum.idle)
+      this.info.health = 100
+      this.setDepth(1)
     }
 
     public changeFrame() {
@@ -118,9 +142,8 @@ class Player extends GameObjects.Image {
       const isDownR = this.isDown('R')
       const isDownSPACE = this.isDown('SPACE')
 
-      if (isDownR) {
-        this.setAnimation(AnimsEnum.idle)
-        this.info.health = 100
+      if (isDownR && this.isDie()) {
+        this.reset()
       }
 
       if (this.isDie()) {
@@ -174,6 +197,8 @@ class Player extends GameObjects.Image {
       if (!isDownW && !isDownD && !isDownS && !isDownA && !isDownSPACE) {
           this.setAnimation(AnimsEnum.idle)
       }
+
+      this.updateLine()
     }
 
     public set(x: number, y: number, motion: AnimsEnum, direction: DirectionEnum, info: PlayerInfo) {
@@ -189,11 +214,11 @@ class Player extends GameObjects.Image {
     }
 
     public attackSkeleton(skeleton: Skeleton) {
-      console.log(skeleton.info)
       this.info.health -= skeleton.info.power
 
       if (this.isDie()) {
         this.setAnimation(AnimsEnum.die)
+        this.setDepth(-1)
       }
     }
 

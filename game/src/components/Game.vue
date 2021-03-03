@@ -16,7 +16,7 @@
         const config = {
           type: Phaser.WEBGL,
           width: window.innerWidth,
-          height: window.innerHeight - 5,
+          height: window.innerHeight,
           backgroundColor: '#ababab',
           parent: root.value,
           scene: [ Game ]

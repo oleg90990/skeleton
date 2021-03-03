@@ -2,9 +2,10 @@ import { Scene } from 'phaser'
 import Player from './Models/Player'
 import Skeleton from './Models/Skeleton'
 import { AnimsEnum, PlayerInfo } from './Models/Player/types'
-import { DirectionEnum, EmitResponseInterface } from '@/game/types'
+import { DirectionEnum, EmitResponseInterface, AvailableLand } from '@/game/types'
 import Socket from '@/game/Utils/socket'
 import intersectionSkeleton from '@/game/Helpers/intersectionSkeleton'
+import randomPosition from './Helpers/randomPosition'
 
 const defaultInfo: PlayerInfo = {
   health: 1000,
@@ -21,13 +22,14 @@ export class Game extends Scene {
     private skeletons: any = {}
     private user: any
     private panel: any
+    private visitingLands: AvailableLand[] = []
 
     constructor() {
         super({ key: 'GameScene' })
     }
 
     public preload() {
-        this.load.json('map', require('@/assets/isometric-grass-and-water.json'))
+        this.load.json('map', require('@/assets/isometric-grass-and-water-small.json'))
         this.load.spritesheet('tiles', require('@/assets/isometric-grass-and-water.png'), {
           frameWidth: 64,
           frameHeight: 64,
@@ -44,6 +46,8 @@ export class Game extends Scene {
     }
 
     public create() {
+      this.cameras.main.setSize(window.innerWidth, window.innerHeight);
+
       this.client = new Socket()
 
       this.client.connect(() => {
@@ -52,12 +56,14 @@ export class Game extends Scene {
 
         this.user = this.add.existing(
           new Player(this,
-             Math.floor(Math.random() *  500),
-             Math.floor(Math.random() *  500),
+             0,
+             0,
              AnimsEnum.idle,
              DirectionEnum.west,
              defaultInfo,
         ))
+
+        this.user.reset()
 
         this.client.init(this.user)
 
@@ -91,6 +97,10 @@ export class Game extends Scene {
       })
     }
 
+    public getRandPosition() {
+      return randomPosition(this.visitingLands);
+    }
+
     public update() {
       if (this.user) {
         this.user.update()
@@ -99,8 +109,12 @@ export class Game extends Scene {
         for (const id in this.skeletons) {
           if (this.skeletons[id]) {
             intersectionSkeleton(this.user, this.skeletons[id])
+            this.skeletons[id].update()
           }
         }
+
+        this.cameras.main.scrollX = this.user.x - window.innerWidth / 2
+        this.cameras.main.scrollY = this.user.y - window.innerHeight / 2
       }
     }
 
@@ -119,8 +133,8 @@ export class Game extends Scene {
         const mapwidth = data.layers[0].width
         const mapheight = data.layers[0].height
 
-        const centerX = mapwidth * this.tileWidthHalf
-        const centerY = 16
+        const centerX = 1600
+        const centerY = 1600
 
         let i = 0
 
@@ -139,6 +153,13 @@ export class Game extends Scene {
                       tile.width,
                       tile.height,
                   ))
+                }
+
+                if ([1, 2, 3].includes(id)) {
+                  this.visitingLands.push({
+                    x: tile.x + tilewidth / 2,
+                    y: tile.y + tileheight / 2,
+                  })
                 }
 
                 i++

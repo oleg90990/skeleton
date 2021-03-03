@@ -3,7 +3,7 @@ import Player from '../Player'
 
 class Skeleton extends Player {
   public update() {
-    return true;
+    this.updateLine()
   }
 }
 

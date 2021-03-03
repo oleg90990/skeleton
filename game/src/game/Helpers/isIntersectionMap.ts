@@ -16,11 +16,19 @@ export default function (image: GameObjects.Image, direction: DirectionItem, spe
   const newX = image.x + direction.x * speed
   const newY = image.y + direction.y * speed + 30
 
+  if (newX <= 0) {
+    return true;
+  }
+
+  if (newY <= 50) {
+    return true;
+  }
+
   const rect1 = new Phaser.Geom.Rectangle(
     newX,
     newY,
     20,
-    20
+    20,
   )
 
   const list: any = image.scene

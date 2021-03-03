@@ -51,3 +51,8 @@ export interface EmitRequestInterface {
   id?: string
   info: PlayerInfo
 }
+
+export interface AvailableLand {
+  x: number
+  y: number
+}
