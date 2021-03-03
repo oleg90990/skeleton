@@ -1,5 +1,5 @@
 import { GameObjects, Scene } from 'phaser'
-import Anims from './anims'
+import Motions from './motions'
 import Directions from './directions'
 import { AnimsEnum, PlayerInfo } from './types'
 import isIntersectionMap from '@/game/Helpers/isIntersectionMap'
@@ -29,7 +29,7 @@ class Player extends GameObjects.Image {
     }
 
     get animation() {
-      return Anims[this.motion]
+      return Motions[this.motion]
     }
 
     get direction() {
@@ -77,7 +77,9 @@ class Player extends GameObjects.Image {
           this.frame = this.texture.get(this.direction.offset + this.f)
         }
 
-        this.scene.time.delayedCall(100, this.changeFrame, [], this)
+        if (this.scene) {
+          this.scene.time.delayedCall(100, this.changeFrame, [], this)
+        }
     }
 
     public setAnimation(newMotion: AnimsEnum) {
@@ -187,6 +189,7 @@ class Player extends GameObjects.Image {
     }
 
     public attackSkeleton(skeleton: Skeleton) {
+      console.log(skeleton.info)
       this.info.health -= skeleton.info.power
 
       if (this.isDie()) {

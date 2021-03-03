@@ -17,7 +17,9 @@ export default class Client {
   }
 
   public init(player: Player) {
-    this.client.emit('init', player.request)
+    const request = player.request
+    request.id = this.id
+    this.client.emit('init', request)
   }
 
   public onInit(callback: (data: EmitResponseInterface) => void) {
@@ -27,7 +29,9 @@ export default class Client {
   }
 
   public emit(player: Player) {
-    this.client.emit('emit', player.request)
+    const request = player.request
+    request.id = this.id
+    this.client.emit('emit', request)
   }
 
   public onEmit(callback: (data: EmitResponseInterface) => void) {

@@ -12,10 +12,8 @@ import Game from './components/Game.vue';
   },
 })
 export default class App extends Vue {
-  created() {
-    console.log(this)
-  }
 }
+
 </script>
 
 <style>

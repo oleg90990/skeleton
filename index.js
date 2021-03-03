@@ -27,7 +27,7 @@ io.on('connection', (socket) => {
   });
 
   socket.on("disconnect", () => {
-    socket.emit('disconectitem', socket.id)
+    socket.broadcast.emit('disconectitem', socket.id)
   });
 })
 

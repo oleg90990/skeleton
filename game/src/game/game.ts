@@ -7,8 +7,8 @@ import Socket from '@/game/Utils/socket'
 import intersectionSkeleton from '@/game/Helpers/intersectionSkeleton'
 
 const defaultInfo: PlayerInfo = {
-  health: 100,
-  power: 10,
+  health: 1000,
+  power: 1,
   powerArea: 30,
   speed: 1,
 }
@@ -65,11 +65,7 @@ export class Game extends Scene {
           if (!this.skeletons[id]) {
             this.client.init(this.user)
             this.skeletons[id] = this.add.existing(new Skeleton(
-              this,
-              x, y,
-              motion,
-              dir,
-              info,
+              this, x, y, motion, dir, info,
             ))
           }
         })
@@ -81,20 +77,17 @@ export class Game extends Scene {
             )
           } else {
             this.skeletons[id] = this.add.existing(new Skeleton(
-              this,
-              x, y,
-              motion,
-              dir,
-              info,
+              this, x, y, motion, dir, info,
             ))
           }
         })
 
-        // this.client.onDisconect((id: string) => {
-        //   if (this.skeletons[id]) {
-        //     this.skeletons[id].delete()
-        //   }
-        // })
+        this.client.onDisconect((id: string) => {
+          if (this.skeletons[id]) {
+            this.skeletons[id].destroy()
+            delete this.skeletons[id]
+          }
+        })
       })
     }
 
