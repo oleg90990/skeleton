@@ -85,7 +85,7 @@ class Player extends GameObjects.Image {
       this.y = pos.y
       this.setAnimation(AnimsEnum.idle)
       this.info.health = 100
-      this.setDepth(1)
+      this.setDepth(100)
     }
 
     public changeFrame() {
