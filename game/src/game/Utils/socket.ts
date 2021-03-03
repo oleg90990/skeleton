@@ -6,7 +6,13 @@ export default class Client {
   private client!: Socket;
 
   public connect(callback: () => void) {
-    this.client = io("ws://localhost:3000", {
+    let url = 'ws://46.17.40.175:3000'
+
+    if (process.env.NODE_ENV === 'development') {
+      url = 'ws://localhost:3000'
+    }
+
+    this.client = io(url, {
       reconnectionDelayMax: 1000,
     })
 
