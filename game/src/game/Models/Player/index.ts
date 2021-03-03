@@ -1,124 +1,99 @@
 import { GameObjects, Scene } from 'phaser'
 import Anims from './anims'
 import Directions from './directions'
-import { AnimsEnum } from './types'
+import { AnimsEnum, PlayerInfo } from './types'
 import isIntersectionMap from '@/game/Helpers/isIntersectionMap'
-import { 
+import {
   AnimationItem,
   DirectionEnum,
   DirectionItem,
+  EmitRequestInterface,
 } from '@/game/types'
-import Socket from '@/game/Helpers/Socket'
 import Skeleton from '../Skeleton'
 
 class Player extends GameObjects.Image {
-    private startX: number
-    private startY: number
-    private anim: AnimationItem
-    private direction: DirectionItem
-    private directionKey: DirectionEnum  
-    private speed: number
+    public motion: AnimsEnum
+    public dir: DirectionEnum
+    public info: PlayerInfo
     private f: number
-    private motion: AnimsEnum
-    private socket: Socket
-    private powerArea: number
-    private power: number
-    private health: number
 
-    constructor(scene: Scene, x: number, y: number, motion: AnimsEnum, direction: DirectionEnum, socket: Socket) {
+    constructor(scene: Scene, x: number, y: number, motion: AnimsEnum, dir: DirectionEnum, info: PlayerInfo) {
         super(scene, x, y, 'skeleton')
 
-        this.health = 100;
-        this.power = 10;
-        this.powerArea = 30;
-
-        this.startX = x
-        this.startY = y
-
-        this.anim = Anims[motion]
-        this.direction = Directions[direction]
-        this.directionKey = direction
-        this.speed = 1
-        this.f = this.anim.startFrame
-        this.depth = y + 64
+        this.info = info
         this.motion = motion
-        this.socket = socket
+        this.dir = dir
 
+        this.f = this.animation.startFrame
         this.scene.time.delayedCall(100, this.changeFrame, [], this)
     }
 
-    getHealth() {
-      return this.health
+    get animation() {
+      return Anims[this.motion]
     }
 
-    getPower() {
-      return this.power
+    get direction() {
+      return Directions[this.dir]
     }
 
-    getRect() {
+    get rect() {
       return new Phaser.Geom.Rectangle(
         this.x,
         this.y,
         50,
-        50
+        50,
       )
     }
 
-    getRectAttack() {
+    get request(): EmitRequestInterface {
+      return {
+        x: this.x,
+        y: this.y,
+        dir: this.dir,
+        motion: this.motion,
+        info: this.info,
+      }
+    }
+
+    get rectAttack() {
       return new Phaser.Geom.Rectangle(
         this.x + this.direction.x * 15,
         this.y + this.direction.y * 15,
-        this.powerArea,
-        this.powerArea
+        this.info.powerArea,
+        this.info.powerArea,
       )
     }
 
-    changeFrame ()
-    {
+    public changeFrame() {
         this.f++
 
-        if (this.f === this.anim.endFrame)
-        {
-          if (this.motion !== AnimsEnum.die) {
-            this.f = this.anim.startFrame
+        if (this.f === this.animation.endFrame) {
+          if (this.animation.once === undefined || !this.animation.once) {
+            this.f = this.animation.startFrame
           } else {
-            this.f = this.anim.endFrame - 1
+            this.f = this.animation.endFrame - 1
           }
-        }
-        else
-        {
-            this.frame = this.texture.get(this.direction.offset + this.f)
+        } else {
+          this.frame = this.texture.get(this.direction.offset + this.f)
         }
 
         this.scene.time.delayedCall(100, this.changeFrame, [], this)
     }
 
-    emitIo() {
-      this.socket.emit({
-        direction: this.directionKey,
-        motion: this.motion,
-        x: this.x,
-        y: this.y
-      })
+    public setAnimation(newMotion: AnimsEnum) {
+      if (this.motion !== newMotion) {
+        this.motion = newMotion
+        this.f = this.animation.startFrame
+        this.frame = this.texture.get(this.direction.offset + this.f)
+      }
     }
 
-    setAnimation(newMotion: AnimsEnum) {
-        if (this.motion !== newMotion) {
-            this.anim = Anims[newMotion]
-            this.motion = newMotion
-            this.f = this.anim.startFrame
-            this.frame = this.texture.get(this.direction.offset + this.f)
-            this.emitIo()
-        }
+    public setDirection(dir: DirectionEnum) {
+      this.dir = dir
+      this.updateDirection()
     }
 
-    setDirection(key: DirectionEnum) {
-      this.directionKey = key
-      this.direction = Directions[key]
-      this.emitIo()
-    }
-
-    isDown(key: string): boolean {
+    public isDown(key: string): boolean {
       return this.scene
         .input
         .keyboard
@@ -126,15 +101,14 @@ class Player extends GameObjects.Image {
         .isDown
     }
 
-    updateDirection() {
-      if (!isIntersectionMap(this, this.direction, this.speed)) {
-        this.x += this.direction.x * this.speed
-        this.y += this.direction.y * this.speed
+    public updateDirection() {
+      if (!isIntersectionMap(this, this.direction, this.info.speed)) {
+        this.x += this.direction.x * this.info.speed
+        this.y += this.direction.y * this.info.speed
       }
     }
 
-    update ()
-    {
+    public update() {
       const isDownW = this.isDown('W')
       const isDownD = this.isDown('D')
       const isDownS = this.isDown('S')
@@ -144,45 +118,50 @@ class Player extends GameObjects.Image {
 
       if (isDownR) {
         this.setAnimation(AnimsEnum.idle)
-        this.health = 100
+        this.info.health = 100
       }
-
 
       if (this.isDie()) {
         return;
       }
 
-      if (isDownW && !isDownD && !isDownS && !isDownA) { //w
+      if (isDownW && !isDownD && !isDownS && !isDownA) { // w
           this.setDirection(DirectionEnum.north)
-          this.updateDirection()
           this.setAnimation(AnimsEnum.walk)
-      } if (isDownW && isDownD && !isDownS && !isDownA) { // wd
+      }
+
+      if (isDownW && isDownD && !isDownS && !isDownA) { // wd
           this.setDirection(DirectionEnum.northEast)
-          this.updateDirection()
           this.setAnimation(AnimsEnum.walk)
-      } if (!isDownW && isDownD && !isDownS && !isDownA) { // d
+      }
+
+      if (!isDownW && isDownD && !isDownS && !isDownA) { // d
           this.setDirection(DirectionEnum.east)
-          this.updateDirection()
           this.setAnimation(AnimsEnum.walk)
-      } if (!isDownW && isDownD && isDownS && !isDownA) { //ds
+      }
+
+      if (!isDownW && isDownD && isDownS && !isDownA) { // ds
           this.setDirection(DirectionEnum.southEast)
-          this.updateDirection()
           this.setAnimation(AnimsEnum.walk)
-      } if (!isDownW && !isDownD && isDownS && !isDownA) { //s
+      }
+
+      if (!isDownW && !isDownD && isDownS && !isDownA) { // s
           this.setDirection(DirectionEnum.south)
-          this.updateDirection()
           this.setAnimation(AnimsEnum.walk)
-      } if (!isDownW && !isDownD && isDownS && isDownA) { //sa
+      }
+
+      if (!isDownW && !isDownD && isDownS && isDownA) { // sa
           this.setDirection(DirectionEnum.southWest)
-          this.updateDirection()
           this.setAnimation(AnimsEnum.walk)
-      } if (!isDownW && !isDownD && !isDownS && isDownA) { // a
+      }
+
+      if (!isDownW && !isDownD && !isDownS && isDownA) { // a
           this.setDirection(DirectionEnum.west)
-          this.updateDirection()
           this.setAnimation(AnimsEnum.walk)
-      } if (isDownW && !isDownD && !isDownS && isDownA) { //aw
+      }
+
+      if (isDownW && !isDownD && !isDownS && isDownA) { // aw
           this.setDirection(DirectionEnum.northWest)
-          this.updateDirection()
           this.setAnimation(AnimsEnum.walk)
       }
 
@@ -195,20 +174,28 @@ class Player extends GameObjects.Image {
       }
     }
 
-    intersectionSkeleton(skeleton: Skeleton) {
-
+    public set(x: number, y: number, motion: AnimsEnum, direction: DirectionEnum, info: PlayerInfo) {
+      this.x = x;
+      this.y = y;
+      this.info = info
+      this.setDirection(direction)
+      this.setAnimation(motion)
     }
 
-    attackSkeleton(skeleton: Skeleton) {
-      this.health -= skeleton.getPower()
+    public intersectionSkeleton(skeleton: Skeleton) {
+      return true;
+    }
+
+    public attackSkeleton(skeleton: Skeleton) {
+      this.info.health -= skeleton.info.power
 
       if (this.isDie()) {
         this.setAnimation(AnimsEnum.die)
       }
     }
 
-    isDie() {
-      return this.health <= 0
+    public isDie() {
+      return this.info.health <= 0
     }
 }
 

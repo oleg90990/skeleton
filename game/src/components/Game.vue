@@ -4,7 +4,7 @@
 </template>
 
 <script>
-  import { Game } from '../game/Game';
+  import { Game } from '../game/game';
   import Phaser from 'phaser'
   import { ref, onMounted } from 'vue'
 

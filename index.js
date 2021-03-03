@@ -17,21 +17,16 @@ app.get('/', (req, res) => {
   res.sendFile(__dirname + '/game/dist/index.html')
 })
 
-const users = {};
-
 io.on('connection', (socket) => {
   socket.on('emit', (data) => {
-    users[data.id] = data
     socket.broadcast.emit('emit', data)
   });
 
   socket.on('init', (data) => {
-    users[data.id] = data
-    socket.emit('init', users)
+    socket.broadcast.emit('init', data)
   });
 
   socket.on("disconnect", () => {
-    delete users[socket.id]
     socket.emit('disconectitem', socket.id)
   });
 })

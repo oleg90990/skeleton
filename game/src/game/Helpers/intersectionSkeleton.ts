@@ -3,16 +3,16 @@ import Skeleton from '../Models/Skeleton'
 import Player from '../Models/Player'
 import { AnimsEnum } from '@/game/Models/Player/types'
 
-export default function (player: Player, skeleton: Skeleton): boolean {
+export default function(player: Player, skeleton: Skeleton) {
   const intersection = Phaser
       .Geom
       .Intersects
       .GetRectangleIntersection(
-        player.getRect(),
-        skeleton.getRect()
-      ) 
+        player.rect,
+        skeleton.rect,
+      )
 
-  if (intersection.x) {
+  if (intersection.x || intersection.y) {
     player.intersectionSkeleton(skeleton)
   }
 
@@ -20,15 +20,13 @@ export default function (player: Player, skeleton: Skeleton): boolean {
       .Geom
       .Intersects
       .GetRectangleIntersection(
-        player.getRect(),
-        skeleton.getRectAttack()
-      ) 
+        player.rect,
+        skeleton.rectAttack,
+      )
 
   if (intersectionAttack.x) {
-    if (skeleton.getMotion() === AnimsEnum.attack) {
+    if (skeleton.motion === AnimsEnum.attack) {
       player.attackSkeleton(skeleton)
     }
   }
-
-  return false
 }

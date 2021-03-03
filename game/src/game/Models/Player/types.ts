@@ -5,7 +5,7 @@ export enum AnimsEnum {
   walk = 'walk',
   attack = 'attack',
   die = 'die',
-  shoot = 'shoot'
+  shoot = 'shoot',
 }
 
 export interface Animations {
@@ -14,4 +14,11 @@ export interface Animations {
   [AnimsEnum.attack]: AnimationItem,
   [AnimsEnum.die]: AnimationItem,
   [AnimsEnum.shoot]: AnimationItem
+}
+
+export interface PlayerInfo {
+  health: number
+  power: number
+  powerArea: number
+  speed: number
 }

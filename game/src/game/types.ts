@@ -1,14 +1,15 @@
-import { AnimsEnum } from '@/game/Models/Player/types'
+import { AnimsEnum, PlayerInfo } from '@/game/Models/Player/types'
 
 export interface DirectionItem {
   offset: number
   x: number
-  y: number   
+  y: number
 }
 
 export interface AnimationItem {
   startFrame: number
   endFrame: number
+  once?: boolean
 }
 
 export enum DirectionEnum {
@@ -19,7 +20,7 @@ export enum DirectionEnum {
   east = 'east',
   southEast = 'southEast',
   south = 'south',
-  southWest = 'southWest'
+  southWest = 'southWest',
 }
 
 export interface Direction {
@@ -33,18 +34,20 @@ export interface Direction {
   [DirectionEnum.southWest]: DirectionItem
 }
 
-export interface EmitRespnseInterface {
-  direction: DirectionEnum
+export interface EmitResponseInterface {
+  dir: DirectionEnum
   motion: AnimsEnum
   x: number
-  y: number,
+  y: number
   id: string
+  info: PlayerInfo
 }
 
 export interface EmitRequestInterface {
-  direction: DirectionEnum
+  dir: DirectionEnum
   motion: AnimsEnum
   x: number
   y: number
   id?: string
+  info: PlayerInfo
 }
