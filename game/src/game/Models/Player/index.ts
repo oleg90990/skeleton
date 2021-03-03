@@ -218,12 +218,17 @@ class Player extends GameObjects.Image {
 
       if (this.isDie()) {
         this.setAnimation(AnimsEnum.die)
-        this.setDepth(-1)
+        this.setDepth(0)
       }
     }
 
     public isDie() {
       return this.info.health <= 0
+    }
+
+    public destroy() {
+      this.line.destroy()
+      super.destroy()
     }
 }
 
