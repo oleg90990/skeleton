@@ -20,8 +20,6 @@ app.get('/', (req, res) => {
   res.sendFile(__dirname + '/game/dist/index.html')
 })
 
-var socket;
-
 io.on('connection', (socket) => {
   socket.on('emit', (data) => {
     socket.broadcast.emit('emit', data)
@@ -47,15 +45,13 @@ io.on('connection', (socket) => {
 setInterval(function (argument) {
   const pos = mapPositions[Math.floor(Math.random() * mapPositions.length)];
 
-  if (socket) {
-    socket.emit('bonus', {
-      id: uuidv4(),
-      x: pos.x,
-      y: pos.y,
-      model: 'Heart',
-      value: 30
-    })
-  }
+  io.sockets.emit('bonus', {
+    id: uuidv4(),
+    x: pos.x,
+    y: pos.y,
+    model: 'Heart',
+    value: 30
+  })
 }, 10000)
 
 http.listen(3000, () => {
