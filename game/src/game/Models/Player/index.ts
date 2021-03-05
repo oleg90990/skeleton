@@ -73,10 +73,10 @@ class Player extends GameObjects.Image {
     }
 
     public updateLine() {
-      const widthLine = 60 * this.info.health / 100;
-      this.line.x = this.x - 0
+      let length = this.info.health / 2
+      this.line.x = this.x - (length - 64) / 2
       this.line.y = this.y - 40
-      this.line.setTo(widthLine < 0 ? 0 : widthLine, 0, 0, 0);
+      this.line.setTo(length, 0, 0, 0);
     }
 
     public reset() {
@@ -207,18 +207,9 @@ class Player extends GameObjects.Image {
       }
     }
 
-    // public intersectionSkeleton(skeleton: Skeleton) {
-    //   return true;
-    // }
-
-    // public attackSkeleton(skeleton: Skeleton) {
-    //   this.info.health -= skeleton.info.power
-
-    //   if (this.isDie()) {
-    //     this.setAnimation(AnimsEnum.die)
-    //     this.setDepth(0)
-    //   }
-    // }
+    public addHealth(health: number) {
+      this.info.health += health
+    }
 
     public isDie() {
       return this.info.health <= 0

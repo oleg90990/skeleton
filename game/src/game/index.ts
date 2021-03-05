@@ -1,8 +1,9 @@
 import { Scene } from 'phaser'
 import Player from './Models/Player'
 import Skeleton from './Models/Skeleton'
+import Heart from './Models/Heart'
 import { AnimsEnum, PlayerInfo } from './Models/Player/types'
-import { DirectionEnum, EmitResponseInterface, AvailableLand } from '@/game/types'
+import { DirectionEnum, EmitResponseInterface, AvailableLand, Bonus } from '@/game/types'
 import Socket from '@/game/Utils/socket'
 import intersectionSkeleton from '@/game/Helpers/intersectionSkeleton'
 import randomPosition from './Helpers/randomPosition'
@@ -24,6 +25,7 @@ export class Game extends Scene {
     private user: any
     private panel: any
     private visitingLands: AvailableLand[] = []
+    private bonuses: any = {}
 
     constructor() {
         super({ key: 'GameScene' })
@@ -31,6 +33,10 @@ export class Game extends Scene {
 
     public preload() {
         this.load.json('map', require('@/assets/isometric-grass-and-water-small.json'))
+        this.load.spritesheet('heart', require('@/assets/heart.png'), {
+          frameWidth: 20,
+          frameHeight: 20,
+        })
         this.load.spritesheet('tiles', require('@/assets/isometric-grass-and-water.png'), {
           frameWidth: 64,
           frameHeight: 64,
@@ -94,6 +100,19 @@ export class Game extends Scene {
             delete this.skeletons[id]
           }
         })
+
+        this.client.onBonus((bonus: Bonus) => {
+          this.bonuses[bonus.id] = this.add.existing(
+            new Heart(this, bonus.x, bonus.y, bonus.id, bonus.value)
+          )
+        })
+
+        this.client.onRemoveBonus((id: string) => {
+          if (this.bonuses[id]) {
+            this.bonuses[id].destroy()
+            delete this.bonuses[id]
+          }
+        })
       })
     }
 
@@ -111,7 +130,12 @@ export class Game extends Scene {
           }
         }
 
-        intersection(this.user, Object.values(this.skeletons))
+        intersection(
+          this.client,
+          this.user,
+          Object.values(this.skeletons),
+          Object.values(this.bonuses),
+        )
 
         this.cameras.main.scrollX = this.user.x - window.innerWidth / 2
         this.cameras.main.scrollY = this.user.y - window.innerHeight / 2

@@ -1,6 +1,8 @@
 import { EmitResponseInterface, EmitRequestInterface } from '@/game/types'
 import { Socket, io } from "socket.io-client"
 import Player from '@/game/Models/Player'
+import { Bonus } from '@/game/types'
+
 export default class Client {
   private id!: string
   private client!: Socket;
@@ -50,5 +52,21 @@ export default class Client {
      this.client.on("disconectitem", (id: string) => {
       callback(id)
     })
+  }
+
+  public onBonus(callback: (bonus: Bonus) => void) {
+    this.client.on("bonus", (data: Bonus) => {
+      callback(data)
+    })
+  }
+
+  public onRemoveBonus(callback: (id: string) => void) {
+    this.client.on("removebonus", (id: string) => {
+      callback(id)
+    })
+  }
+
+  public removeBonus(id: string) {
+    this.client.emit("removebonus", id)
   }
 }

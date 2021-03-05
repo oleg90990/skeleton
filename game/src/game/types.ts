@@ -56,3 +56,11 @@ export interface AvailableLand {
   x: number
   y: number
 }
+
+export interface Bonus {
+  id: string,
+  model: String,
+  value: number,
+  x: number,
+  y: number
+}

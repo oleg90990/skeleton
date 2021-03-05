@@ -1,6 +1,16 @@
 import Player from '../Models/Player'
+import Heart from '../Models/Heart'
 import Skeleton from '../Models/Skeleton'
 import { AnimsEnum } from '@/game/Models/Player/types'
+import Socket from '@/game/Utils/socket'
+
+function intersectsBonus(player: Player, bonus: Heart) {
+  if (!bonus.used) {
+    player.addHealth(bonus.value)
+  }
+
+  bonus.used = true
+}
 
 function intersectsSkeleton(player: Player, skeleton: Skeleton) {
   const intersectionAttack = Phaser
@@ -34,7 +44,22 @@ function intersectsAttack(player: Player, skeleton: Skeleton) {
   player.setAttack(skeleton.info.power * distancePower)
 }
 
-export default function (player: Player, skeletons: Skeleton[]) {
+export default function (client: Socket, player: Player, skeletons: Skeleton[], bonuses: Heart[]) {
+  for(const bonus of bonuses) {
+    const intersection = Phaser
+      .Geom
+      .Intersects
+      .GetRectangleIntersection(
+        player.rect,
+        bonus.rect,
+      )
+
+    if (intersection.x || intersection.y) {
+      intersectsBonus(player, bonus)
+      client.removeBonus(bonus.id)
+    }
+  }
+
   for(const skeleton of skeletons) {
     const intersection = Phaser
       .Geom
