@@ -1,6 +1,7 @@
 import { EmitResponseInterface, EmitRequestInterface } from '@/game/types'
 import { Socket, io } from "socket.io-client"
 import Player from '@/game/Models/Player'
+import Heart from '@/game/Models/Heart'
 import { Bonus } from '@/game/types'
 
 export default class Client {
@@ -55,8 +56,8 @@ export default class Client {
   }
 
   public onBonus(callback: (bonus: Bonus) => void) {
-    this.client.on("bonus", (data: Bonus) => {
-      callback(data)
+    this.client.on("bonus", (bonus: Bonus) => {
+      callback(bonus)
     })
   }
 
@@ -68,5 +69,17 @@ export default class Client {
 
   public removeBonus(id: string) {
     this.client.emit("removebonus", id)
+  }
+
+  public initBonuses(bonuses: Heart[]) {
+    this.client.emit("initbonuses", bonuses.map(({ x, y, id, value }) => {
+      return { x, y, id, value }
+    }))
+  }
+
+  public onInitBonuses(callback: (bonuses: any) => void) {
+    this.client.on("initbonuses", (bonuses: Heart[]) => {
+      callback(bonuses)
+    })
   }
 }

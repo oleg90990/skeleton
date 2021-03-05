@@ -55,6 +55,10 @@ io.on('connection', (socket) => {
     socket.broadcast.emit('init', data)
   });
 
+  socket.on('initbonuses', (data) => {
+    socket.broadcast.emit('initbonuses', data)
+  });
+
   socket.on('removebonus', (data) => {
     io.sockets.emit('removebonus', data)
   });

@@ -3,6 +3,7 @@ import Motions from './motions'
 import Directions from './directions'
 import { AnimsEnum, PlayerInfo } from './types'
 import isDown from '@/game/Helpers/isDown'
+import { isDownMouse, getDirection, getPosition } from '@/game/Helpers/mousePointer'
 import {
   AnimationItem,
   DirectionEnum,
@@ -20,12 +21,18 @@ class Player extends GameObjects.Image {
     public info: PlayerInfo
     private f: number
 
-    constructor(scene: Scene, x: number, y: number, motion: AnimsEnum, dir: DirectionEnum, info: PlayerInfo) {
-        super(scene, x, y, 'skeleton')
+    constructor(scene: Scene) {
+        super(scene, 0, 0, 'skeleton')
 
-        this.info = info
-        this.motion = motion
-        this.dir = dir
+        this.info = {
+          health: 1000,
+          power: 1,
+          powerArea: 30,
+          speed: 1,
+        }
+
+        this.motion = AnimsEnum.idle
+        this.dir = DirectionEnum.west
 
         this.f = this.animation.startFrame
         this.scene.time.delayedCall(100, this.changeFrame, [], this)
@@ -115,19 +122,16 @@ class Player extends GameObjects.Image {
       }
     }
 
-    public setDirection(dir: DirectionEnum) {
-      this.dir = dir
+    public setDirection() {
+      this.dir = getDirection(this)
       if (!isIntersectionMap(this, this.scene as Game)) {
-        this.x += this.direction.x * this.info.speed
-        this.y += this.direction.y * this.info.speed
+        const { x, y } = getPosition(this)
+        this.x += x * this.info.speed
+        this.y += y * this.info.speed
       }
     }
 
     public update() {
-      const isDownW = isDown(this.scene, 'W')
-      const isDownD = isDown(this.scene, 'D')
-      const isDownS = isDown(this.scene, 'S')
-      const isDownA = isDown(this.scene, 'A')
       const isDownR = isDown(this.scene, 'R')
       const isDownSPACE = isDown(this.scene, 'SPACE')
 
@@ -139,63 +143,28 @@ class Player extends GameObjects.Image {
         return;
       }
 
-      if (isDownW && !isDownD && !isDownS && !isDownA) { // w
-          this.setDirection(DirectionEnum.north)
-          this.setAnimation(AnimsEnum.walk)
-      }
+      if (isDownMouse(this) && !isDownSPACE) {
+        this.setAnimation(AnimsEnum.walk)
+        this.setDirection()
+      } 
 
-      if (isDownW && isDownD && !isDownS && !isDownA) { // wd
-          this.setDirection(DirectionEnum.northEast)
-          this.setAnimation(AnimsEnum.walk)
-      }
-
-      if (!isDownW && isDownD && !isDownS && !isDownA) { // d
-          this.setDirection(DirectionEnum.east)
-          this.setAnimation(AnimsEnum.walk)
-      }
-
-      if (!isDownW && isDownD && isDownS && !isDownA) { // ds
-          this.setDirection(DirectionEnum.southEast)
-          this.setAnimation(AnimsEnum.walk)
-      }
-
-      if (!isDownW && !isDownD && isDownS && !isDownA) { // s
-          this.setDirection(DirectionEnum.south)
-          this.setAnimation(AnimsEnum.walk)
-      }
-
-      if (!isDownW && !isDownD && isDownS && isDownA) { // sa
-          this.setDirection(DirectionEnum.southWest)
-          this.setAnimation(AnimsEnum.walk)
-      }
-
-      if (!isDownW && !isDownD && !isDownS && isDownA) { // a
-          this.setDirection(DirectionEnum.west)
-          this.setAnimation(AnimsEnum.walk)
-      }
-
-      if (isDownW && !isDownD && !isDownS && isDownA) { // aw
-          this.setDirection(DirectionEnum.northWest)
-          this.setAnimation(AnimsEnum.walk)
-      }
-
-      if (!isDownW && !isDownD && !isDownS && !isDownA && isDownSPACE) {
+      if (isDownSPACE) {
         this.setAnimation(AnimsEnum.attack)
       }
 
-      if (!isDownW && !isDownD && !isDownS && !isDownA && !isDownSPACE) {
-          this.setAnimation(AnimsEnum.idle)
+      if (!isDownMouse(this) && !isDownSPACE) {
+        this.setAnimation(AnimsEnum.idle)
       }
 
       this.updateLine()
     }
 
     public set(x: number, y: number, motion: AnimsEnum, direction: DirectionEnum, info: PlayerInfo) {
+      this.setAnimation(motion)
+      this.dir = direction
       this.x = x;
       this.y = y;
       this.info = info
-      this.setDirection(direction)
-      this.setAnimation(motion)
     }
 
     public setAttack(power: number) {

@@ -9,13 +9,6 @@ import intersectionSkeleton from '@/game/Helpers/intersectionSkeleton'
 import randomPosition from './Helpers/randomPosition'
 import intersection from '@/game/Utils/intersection'
 
-const defaultInfo: PlayerInfo = {
-  health: 1000,
-  power: 1,
-  powerArea: 30,
-  speed: 1,
-}
-
 export class Game extends Scene {
     public tileIntersects: Phaser.Geom.Rectangle[] = []
     private tileWidthHalf: any
@@ -27,7 +20,7 @@ export class Game extends Scene {
     private visitingLands: AvailableLand[] = []
     private bonuses: any = {}
     private lastTime = 0;
-    private delayEmit = 100;
+    private delayEmit = 50;
 
     constructor() {
         super({ key: 'GameScene' })
@@ -64,23 +57,18 @@ export class Game extends Scene {
         this.placeHouses()
 
         this.user = this.add.existing(
-          new Player(this,
-             0, 0,
-             AnimsEnum.idle,
-             DirectionEnum.west,
-             defaultInfo,
-        ))
+          new Player(this)
+        )
 
         this.user.reset()
 
         this.client.init(this.user)
 
-        this.client.onInit(({ x, y, motion, dir, id, info }: EmitResponseInterface) => {
+        this.client.onInit(({ id }: EmitResponseInterface) => {
           if (!this.skeletons[id]) {
             this.client.init(this.user)
-            this.skeletons[id] = this.add.existing(new Skeleton(
-              this, x, y, motion, dir, info,
-            ))
+            this.client.initBonuses(Object.values(this.bonuses))
+            this.skeletons[id] = this.add.existing(new Skeleton(this))
           }
         })
 
@@ -90,9 +78,7 @@ export class Game extends Scene {
               x, y, motion, dir, info,
             )
           } else {
-            this.skeletons[id] = this.add.existing(new Skeleton(
-              this, x, y, motion, dir, info,
-            ))
+            this.skeletons[id] = this.add.existing(new Skeleton(this))
           }
         })
 
@@ -113,6 +99,16 @@ export class Game extends Scene {
           if (this.bonuses[id]) {
             this.bonuses[id].destroy()
             delete this.bonuses[id]
+          }
+        })
+
+        this.client.onInitBonuses((bonuses: Heart[]) => {
+          for(const bonus of bonuses) {
+            if (!this.bonuses[bonus.id]) {
+              this.bonuses[bonus.id] = this.add.existing(
+                new Heart(this, bonus.x, bonus.y, bonus.id, bonus.value)
+              )
+            }
           }
         })
       })

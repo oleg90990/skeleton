@@ -25,6 +25,11 @@
         new Phaser.Game(config);
       })
 
+      // onUnmounted(() => {
+      //   console.log()
+      //   game.destroy(true);
+      // })
+
       return {
         root
       }

@@ -4,9 +4,9 @@ import { AnimsEnum } from '../Player/types'
 
 class Skeleton extends Player {
   public update() {
-    if (this.motion === AnimsEnum.walk) {
-      this.setDirection(this.dir)
-    }
+    // if (this.motion === AnimsEnum.walk) {
+    //   this.setDirection(this.dir)
+    // }
     this.setAnimation(this.motion)
     this.updateLine()
   }
