@@ -26,6 +26,8 @@ export class Game extends Scene {
     private panel: any
     private visitingLands: AvailableLand[] = []
     private bonuses: any = {}
+    private lastTime = 0;
+    private delayEmit = 300;
 
     constructor() {
         super({ key: 'GameScene' })
@@ -131,8 +133,7 @@ export class Game extends Scene {
         }
 
         intersection(
-          this.client,
-          this.user,
+          this.client, this.user,
           Object.values(this.skeletons),
           Object.values(this.bonuses),
         )
@@ -140,7 +141,11 @@ export class Game extends Scene {
         this.cameras.main.scrollX = this.user.x - window.innerWidth / 2
         this.cameras.main.scrollY = this.user.y - window.innerHeight / 2
 
-        this.client.emit(this.user)
+        if (this.time.now - this.lastTime > this.delayEmit) {
+          this.client.emit(this.user)
+          this.lastTime = this.time.now
+          console.log('emit')
+        }
       }
     }
 
