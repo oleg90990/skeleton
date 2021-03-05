@@ -2,7 +2,7 @@ import { GameObjects, Scene } from 'phaser'
 import Motions from './motions'
 import Directions from './directions'
 import { AnimsEnum, PlayerInfo } from './types'
-import isIntersectionMap from '@/game/Helpers/isIntersectionMap'
+import isDown from '@/game/Helpers/isDown'
 import {
   AnimationItem,
   DirectionEnum,
@@ -10,6 +10,8 @@ import {
   EmitRequestInterface,
 } from '@/game/types'
 import Skeleton from '../Skeleton'
+import isIntersectionMap from '@/game/Helpers/isIntersectionMap'
+import Game from '@/game'
 
 class Player extends GameObjects.Image {
     public line: any
@@ -51,6 +53,15 @@ class Player extends GameObjects.Image {
       )
     }
 
+    get rectAttack() {
+      return new Phaser.Geom.Rectangle(
+        this.x + this.direction.x * 15,
+        this.y + this.direction.y * 15,
+        this.info.powerArea,
+        this.info.powerArea,
+      )
+    }
+
     get request(): EmitRequestInterface {
       return {
         x: this.x,
@@ -61,18 +72,8 @@ class Player extends GameObjects.Image {
       }
     }
 
-    get rectAttack() {
-      return new Phaser.Geom.Rectangle(
-        this.x + this.direction.x * 15,
-        this.y + this.direction.y * 15,
-        this.info.powerArea,
-        this.info.powerArea,
-      )
-    }
-
     public updateLine() {
       const widthLine = 60 * this.info.health / 100;
-
       this.line.x = this.x - 0
       this.line.y = this.y - 40
       this.line.setTo(widthLine < 0 ? 0 : widthLine, 0, 0, 0);
@@ -89,21 +90,21 @@ class Player extends GameObjects.Image {
     }
 
     public changeFrame() {
-        this.f++
+      this.f++
 
-        if (this.f === this.animation.endFrame) {
-          if (this.animation.once === undefined || !this.animation.once) {
-            this.f = this.animation.startFrame
-          } else {
-            this.f = this.animation.endFrame - 1
-          }
+      if (this.f === this.animation.endFrame) {
+        if (this.animation.once === undefined || !this.animation.once) {
+          this.f = this.animation.startFrame
         } else {
-          this.frame = this.texture.get(this.direction.offset + this.f)
+          this.f = this.animation.endFrame - 1
         }
+      } else {
+        this.frame = this.texture.get(this.direction.offset + this.f)
+      }
 
-        if (this.scene) {
-          this.scene.time.delayedCall(100, this.changeFrame, [], this)
-        }
+      if (this.scene) {
+        this.scene.time.delayedCall(100, this.changeFrame, [], this)
+      }
     }
 
     public setAnimation(newMotion: AnimsEnum) {
@@ -116,31 +117,19 @@ class Player extends GameObjects.Image {
 
     public setDirection(dir: DirectionEnum) {
       this.dir = dir
-      this.updateDirection()
-    }
-
-    public isDown(key: string): boolean {
-      return this.scene
-        .input
-        .keyboard
-        .addKey(key)
-        .isDown
-    }
-
-    public updateDirection() {
-      if (!isIntersectionMap(this, this.direction, this.info.speed)) {
+      if (!isIntersectionMap(this, this.scene as Game)) {
         this.x += this.direction.x * this.info.speed
         this.y += this.direction.y * this.info.speed
       }
     }
 
     public update() {
-      const isDownW = this.isDown('W')
-      const isDownD = this.isDown('D')
-      const isDownS = this.isDown('S')
-      const isDownA = this.isDown('A')
-      const isDownR = this.isDown('R')
-      const isDownSPACE = this.isDown('SPACE')
+      const isDownW = isDown(this.scene, 'W')
+      const isDownD = isDown(this.scene, 'D')
+      const isDownS = isDown(this.scene, 'S')
+      const isDownA = isDown(this.scene, 'A')
+      const isDownR = isDown(this.scene, 'R')
+      const isDownSPACE = isDown(this.scene, 'SPACE')
 
       if (isDownR && this.isDie()) {
         this.reset()
@@ -209,18 +198,27 @@ class Player extends GameObjects.Image {
       this.setAnimation(motion)
     }
 
-    public intersectionSkeleton(skeleton: Skeleton) {
-      return true;
-    }
-
-    public attackSkeleton(skeleton: Skeleton) {
-      this.info.health -= skeleton.info.power
+    public setAttack(power: number) {
+      this.info.health -= power
 
       if (this.isDie()) {
         this.setAnimation(AnimsEnum.die)
         this.setDepth(0)
       }
     }
+
+    // public intersectionSkeleton(skeleton: Skeleton) {
+    //   return true;
+    // }
+
+    // public attackSkeleton(skeleton: Skeleton) {
+    //   this.info.health -= skeleton.info.power
+
+    //   if (this.isDie()) {
+    //     this.setAnimation(AnimsEnum.die)
+    //     this.setDepth(0)
+    //   }
+    // }
 
     public isDie() {
       return this.info.health <= 0

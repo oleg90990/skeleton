@@ -6,6 +6,7 @@ import { DirectionEnum, EmitResponseInterface, AvailableLand } from '@/game/type
 import Socket from '@/game/Utils/socket'
 import intersectionSkeleton from '@/game/Helpers/intersectionSkeleton'
 import randomPosition from './Helpers/randomPosition'
+import intersection from '@/game/Utils/intersection'
 
 const defaultInfo: PlayerInfo = {
   health: 1000,
@@ -15,7 +16,7 @@ const defaultInfo: PlayerInfo = {
 }
 
 export class Game extends Scene {
-    private tileIntersects: Phaser.Geom.Rectangle[] = []
+    public tileIntersects: Phaser.Geom.Rectangle[] = []
     private tileWidthHalf: any
     private tileHeightHalf: any
     private client!: Socket
@@ -56,8 +57,7 @@ export class Game extends Scene {
 
         this.user = this.add.existing(
           new Player(this,
-             0,
-             0,
+             0, 0,
              AnimsEnum.idle,
              DirectionEnum.west,
              defaultInfo,
@@ -104,17 +104,19 @@ export class Game extends Scene {
     public update() {
       if (this.user) {
         this.user.update()
-        this.client.emit(this.user)
 
         for (const id in this.skeletons) {
           if (this.skeletons[id]) {
-            intersectionSkeleton(this.user, this.skeletons[id])
             this.skeletons[id].update()
           }
         }
 
+        intersection(this.user, Object.values(this.skeletons))
+
         this.cameras.main.scrollX = this.user.x - window.innerWidth / 2
         this.cameras.main.scrollY = this.user.y - window.innerHeight / 2
+
+        this.client.emit(this.user)
       }
     }
 
@@ -175,3 +177,5 @@ export class Game extends Scene {
         // house_2.depth = 9999
     }
 }
+
+export default Game
