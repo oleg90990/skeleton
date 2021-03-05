@@ -83,7 +83,7 @@ class Player extends GameObjects.Image {
       let length = this.info.health / 2
       this.line.x = this.x - (length - 64) / 2
       this.line.y = this.y - 40
-      this.line.setTo(length, 0, 0, 0);
+      this.line.setTo(length < 0 ? 0 : length, 0, 0, 0);
     }
 
     public reset() {
