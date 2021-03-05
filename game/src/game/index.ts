@@ -27,7 +27,7 @@ export class Game extends Scene {
     private visitingLands: AvailableLand[] = []
     private bonuses: any = {}
     private lastTime = 0;
-    private delayEmit = 300;
+    private delayEmit = 100;
 
     constructor() {
         super({ key: 'GameScene' })
@@ -144,7 +144,6 @@ export class Game extends Scene {
         if (this.time.now - this.lastTime > this.delayEmit) {
           this.client.emit(this.user)
           this.lastTime = this.time.now
-          console.log('emit')
         }
       }
     }
