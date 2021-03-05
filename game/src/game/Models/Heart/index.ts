@@ -26,12 +26,11 @@ class Heart extends GameObjects.Image {
     }
   }
 
-  get rect() {
-    return new Phaser.Geom.Rectangle(
+  get area() {
+    return new Phaser.Geom.Circle(
       this.x,
       this.y,
-      50,
-      50,
+      30,
     )
   }
 }

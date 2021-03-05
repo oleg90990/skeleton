@@ -13,15 +13,15 @@ function intersectsBonus(player: Player, bonus: Heart) {
 }
 
 function intersectsSkeleton(player: Player, skeleton: Skeleton) {
-  const intersectionAttack = Phaser
+  const points = Phaser
     .Geom
     .Intersects
-    .GetRectangleIntersection(
-      player.rect,
-      skeleton.rectAttack,
+    .GetCircleToCircle(
+      player.area,
+      skeleton.areaAttack,
     )
 
-    if (intersectionAttack.x || intersectionAttack.y) {
+    if (points.length > 0) {
       if (skeleton.motion === AnimsEnum.attack) {
         intersectsAttack(player, skeleton)
       }
@@ -46,30 +46,30 @@ function intersectsAttack(player: Player, skeleton: Skeleton) {
 
 export default function (client: Socket, player: Player, skeletons: Skeleton[], bonuses: Heart[]) {
   for(const bonus of bonuses) {
-    const intersection = Phaser
+    const points = Phaser
       .Geom
       .Intersects
-      .GetRectangleIntersection(
-        player.rect,
-        bonus.rect,
+      .GetCircleToCircle(
+        player.area,
+        bonus.area,
       )
 
-    if (intersection.x || intersection.y) {
+    if (points.length > 0) {
       intersectsBonus(player, bonus)
       client.removeBonus(bonus.id)
     }
   }
 
   for(const skeleton of skeletons) {
-    const intersection = Phaser
+    const points = Phaser
       .Geom
       .Intersects
-      .GetRectangleIntersection(
-        player.rect,
-        skeleton.rect,
+      .GetCircleToCircle(
+        player.area,
+        skeleton.area,
       )
 
-      if (intersection.x || intersection.y) {
+      if (points.length > 0) {
         intersectsSkeleton(player, skeleton)
       }
   }

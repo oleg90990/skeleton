@@ -36,7 +36,7 @@ const directions: Direction = {
     x: 0,
     y: 2,
   },
-  southWest: { // sd
+  southWest: { // as
     offset: 224,
     x: -2,
     y: 1,

@@ -9,6 +9,8 @@ import {
   DirectionEnum,
   DirectionItem,
   EmitRequestInterface,
+  EmitResponseInterface,
+  DirectionPoints,
 } from '@/game/types'
 import Skeleton from '../Skeleton'
 import isIntersectionMap from '@/game/Helpers/isIntersectionMap'
@@ -20,6 +22,7 @@ class Player extends GameObjects.Image {
     public dir: DirectionEnum
     public info: PlayerInfo
     private f: number
+    private directionPoints: DirectionPoints;
 
     constructor(scene: Scene) {
         super(scene, 0, 0, 'skeleton')
@@ -33,6 +36,9 @@ class Player extends GameObjects.Image {
 
         this.motion = AnimsEnum.idle
         this.dir = DirectionEnum.west
+        this.directionPoints = {
+          x: 0, y: 0
+        }
 
         this.f = this.animation.startFrame
         this.scene.time.delayedCall(100, this.changeFrame, [], this)
@@ -51,26 +57,25 @@ class Player extends GameObjects.Image {
       return Directions[this.dir]
     }
 
-    get rect() {
-      return new Phaser.Geom.Rectangle(
-        this.x,
-        this.y,
-        50,
-        50,
+    get area() {
+      return new Phaser.Geom.Circle(
+        this.x + 0,
+        this.y + 20,
+        30,
       )
     }
 
-    get rectAttack() {
-      return new Phaser.Geom.Rectangle(
-        this.x + this.direction.x * 15,
-        this.y + this.direction.y * 15,
-        this.info.powerArea,
+    get areaAttack() {
+      return new Phaser.Geom.Circle(
+        this.x + this.directionPoints.x * 30,
+        this.y + this.directionPoints.y * 30,
         this.info.powerArea,
       )
     }
 
     get request(): EmitRequestInterface {
       return {
+        directionPoints: this.directionPoints,
         x: this.x,
         y: this.y,
         dir: this.dir,
@@ -122,12 +127,18 @@ class Player extends GameObjects.Image {
       }
     }
 
+    public updateDirectionPoints() {
+      this.directionPoints = getPosition(this)
+    }
+
     public setDirection() {
       this.dir = getDirection(this)
+    }
+
+    public setMove() {
       if (!isIntersectionMap(this, this.scene as Game)) {
-        const { x, y } = getPosition(this)
-        this.x += x * this.info.speed
-        this.y += y * this.info.speed
+        this.x += this.directionPoints.x * this.info.speed
+        this.y += this.directionPoints.y * this.info.speed
       }
     }
 
@@ -143,14 +154,21 @@ class Player extends GameObjects.Image {
         return;
       }
 
+
+      if (isDownMouse(this)) {
+        this.updateDirectionPoints()
+        this.setDirection()
+      }
+
       if (isDownMouse(this) && !isDownSPACE) {
         this.setAnimation(AnimsEnum.walk)
-        this.setDirection()
-      } 
+        this.setMove()
+      }
 
       if (isDownSPACE) {
         this.setAnimation(AnimsEnum.attack)
-      }
+         //this.scene.add.circle(this.x + 0, this.y + 20 , 30, 0xbb6699);
+        }
 
       if (!isDownMouse(this) && !isDownSPACE) {
         this.setAnimation(AnimsEnum.idle)
@@ -159,9 +177,10 @@ class Player extends GameObjects.Image {
       this.updateLine()
     }
 
-    public set(x: number, y: number, motion: AnimsEnum, direction: DirectionEnum, info: PlayerInfo) {
+    public set({ x, y, motion, dir, directionPoints, info }: EmitResponseInterface) {
+      this.directionPoints = directionPoints
       this.setAnimation(motion)
-      this.dir = direction
+      this.dir = dir
       this.x = x;
       this.y = y;
       this.info = info

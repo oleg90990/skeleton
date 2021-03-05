@@ -5,7 +5,6 @@ import Heart from './Models/Heart'
 import { AnimsEnum, PlayerInfo } from './Models/Player/types'
 import { DirectionEnum, EmitResponseInterface, AvailableLand, Bonus } from '@/game/types'
 import Socket from '@/game/Utils/socket'
-import intersectionSkeleton from '@/game/Helpers/intersectionSkeleton'
 import randomPosition from './Helpers/randomPosition'
 import intersection from '@/game/Utils/intersection'
 
@@ -61,9 +60,7 @@ export class Game extends Scene {
         )
 
         this.user.reset()
-
         this.client.init(this.user)
-
         this.client.onInit(({ id }: EmitResponseInterface) => {
           if (!this.skeletons[id]) {
             this.client.init(this.user)
@@ -72,13 +69,11 @@ export class Game extends Scene {
           }
         })
 
-        this.client.onEmit(({ x, y, motion, dir, id, info }: EmitResponseInterface) => {
-          if (this.skeletons[id]) {
-            this.skeletons[id].set(
-              x, y, motion, dir, info,
-            )
+        this.client.onEmit((response: EmitResponseInterface) => {
+          if (this.skeletons[response.id]) {
+            this.skeletons[response.id].set(response)
           } else {
-            this.skeletons[id] = this.add.existing(new Skeleton(this))
+            this.skeletons[response.id] = this.add.existing(new Skeleton(this))
           }
         })
 

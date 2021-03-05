@@ -1,5 +1,10 @@
 import { AnimsEnum, PlayerInfo } from '@/game/Models/Player/types'
 
+export interface DirectionPoints {
+  x: number
+  y: number
+}
+
 export interface DirectionItem {
   offset: number
   x: number
@@ -35,6 +40,7 @@ export interface Direction {
 }
 
 export interface EmitResponseInterface {
+  directionPoints: DirectionPoints
   dir: DirectionEnum
   motion: AnimsEnum
   x: number
@@ -44,6 +50,7 @@ export interface EmitResponseInterface {
 }
 
 export interface EmitRequestInterface {
+  directionPoints: DirectionPoints
   dir: DirectionEnum
   motion: AnimsEnum
   x: number
