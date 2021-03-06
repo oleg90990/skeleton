@@ -1,21 +1,22 @@
-import Player from '@/game/Models/Player'
-import { DirectionEnum } from '@/game/types'
-export function isDownMouse(player: Player) {
-  return player.scene.input.mousePointer.isDown
+import { GameObjects } from 'phaser'
+import { DirectionEnum } from '@/game/Models/Player/enums'
+
+export function isDownMouse(scene: Phaser.Scene) {
+  return scene.input.mousePointer.isDown
 }
 
-export function getRadius(player: Player) {
-  const mousePointer = player.scene.input.mousePointer
-  const camera = player.scene.cameras.main
+export function getRadius(image: GameObjects.Image) {
+  const mousePointer = image.scene.input.mousePointer
+  const camera = image.scene.cameras.main
   return Phaser.Math.Angle.Between(
-    player.x, player.y,
+    image.x, image.y,
     mousePointer.x + camera.scrollX,
     mousePointer.y + camera.scrollY
   );
 }
 
-export function getDirection(player: Player): DirectionEnum {
-  const radius = getRadius(player)
+export function getDirection(image: GameObjects.Image): DirectionEnum {
+  const radius = getRadius(image)
 
   if (radius > -1.9625 && radius < -1.1775) {
     return DirectionEnum.north
@@ -52,8 +53,8 @@ export function getDirection(player: Player): DirectionEnum {
   return DirectionEnum.north
 }
 
-export function getPosition(player: Player) {
-  const radius = getRadius(player)
+export function getOffset(image: GameObjects.Image) {
+  const radius = getRadius(image)
   return {
     x: Math.cos(radius) * 2,
     y: Math.sin(radius) * 2

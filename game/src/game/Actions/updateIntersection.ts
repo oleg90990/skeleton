@@ -3,6 +3,7 @@ import Heart from '../Models/Heart'
 import Skeleton from '../Models/Skeleton'
 import { AnimsEnum } from '@/game/Models/Player/types'
 import Socket from '@/game/Utils/socket'
+import Scene from '@/game'
 
 function intersectsBonus(player: Player, bonus: Heart) {
   if (!bonus.used) {
@@ -44,7 +45,7 @@ function intersectsAttack(player: Player, skeleton: Skeleton) {
   player.setAttack(skeleton.info.power * distancePower)
 }
 
-export default function (client: Socket, player: Player, skeletons: Skeleton[], bonuses: Heart[]) {
+export default function (scene: Scene, client: Socket, player: Player, skeletons: Skeleton[], bonuses: Heart[]) {
   for(const bonus of bonuses) {
     const points = Phaser
       .Geom

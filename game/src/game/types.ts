@@ -1,73 +1,65 @@
-import { AnimsEnum, PlayerInfo } from '@/game/Models/Player/types'
+import { GameObjects } from 'phaser'
 
-export interface DirectionPoints {
-  x: number
-  y: number
+export interface ServiceProviderInterface {
+  items: ServiceInterface[]
 }
 
-export interface DirectionItem {
-  offset: number
-  x: number
-  y: number
+export interface ServiceInterface {
+  execute?: () => void
+  preload?: () => void
+  create?: () => void
+  update?: () => void
 }
 
-export interface AnimationItem {
-  startFrame: number
-  endFrame: number
-  once?: boolean
-}
+export type ServiceGetterInterface = (name: string) => ServiceInterface | undefined
 
-export enum DirectionEnum {
-  west = 'west',
-  northWest = 'northWest',
-  north = 'north',
-  northEast = 'northEast',
-  east = 'east',
-  southEast = 'southEast',
-  south = 'south',
-  southWest = 'southWest',
-}
+// export interface DirectionPoints {
+//   x: number
+//   y: number
+// }
 
-export interface Direction {
-  [DirectionEnum.west]: DirectionItem
-  [DirectionEnum.northWest]: DirectionItem
-  [DirectionEnum.north]: DirectionItem
-  [DirectionEnum.northEast]: DirectionItem
-  [DirectionEnum.east]: DirectionItem
-  [DirectionEnum.southEast]: DirectionItem
-  [DirectionEnum.south]: DirectionItem
-  [DirectionEnum.southWest]: DirectionItem
-}
+// export interface DirectionItem {
+//   offset: number
+//   x: number
+//   y: number
+// }
 
-export interface EmitResponseInterface {
-  directionPoints: DirectionPoints
-  dir: DirectionEnum
-  motion: AnimsEnum
-  x: number
-  y: number
-  id: string
-  info: PlayerInfo
-}
+// export interface AnimationItem {
+//   startFrame: number
+//   endFrame: number
+//   once?: boolean
+// }
 
-export interface EmitRequestInterface {
-  directionPoints: DirectionPoints
-  dir: DirectionEnum
-  motion: AnimsEnum
-  x: number
-  y: number
-  id?: string
-  info: PlayerInfo
-}
 
-export interface AvailableLand {
-  x: number
-  y: number
-}
+// export interface EmitResponseInterface {
+//   directionPoints: DirectionPoints
+//   dir: DirectionEnum
+//   motion: AnimsEnum
+//   x: number
+//   y: number
+//   id: string
+//   info: PlayerInfo
+// }
 
-export interface Bonus {
-  id: string,
-  model: String,
-  value: number,
-  x: number,
-  y: number
-}
+// export interface EmitRequestInterface {
+//   directionPoints: DirectionPoints
+//   dir: DirectionEnum
+//   motion: AnimsEnum
+//   x: number
+//   y: number
+//   id?: string
+//   info: PlayerInfo
+// }
+
+// export interface AvailableLand {
+//   x: number
+//   y: number
+// }
+
+// export interface Bonus {
+//   id: string,
+//   model: String,
+//   value: number,
+//   x: number,
+//   y: number
+// }
