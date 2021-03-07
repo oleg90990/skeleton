@@ -44,8 +44,8 @@ class Player extends GameObjects.Image {
 
     get areaAttack() {
       return new Phaser.Geom.Circle(
-        this.x + this.directionOffset.x * this.info.powerArea,
-        this.y + this.directionOffset.y * this.info.powerArea,
+        this.x + this.directionOffset.x * (20 + this.info.powerArea),
+        this.y + this.directionOffset.y * (20 + this.info.powerArea),
         this.info.powerArea,
       )
     }
@@ -107,7 +107,7 @@ class Player extends GameObjects.Image {
     }
 
     public removeHealth(health: number) {
-      this.info.health += health
+      this.info.health -= health
     }
 
     public addHealth(health: number) {

@@ -1,7 +1,7 @@
 import { onInitEnemy, initPlayer, updateEnemy, disconect, bonuses, onEnemyAttack } from '@/game/Client'
 import Enemy from './enemy'
 import setPlayer from '@/game/Models/Player/Actions/set'
-import AttackPlayer from '@/game/Models/Player/Actions/attack'
+import ToAttack from '@/game/Models/Player/Actions/toAttack'
 import { PlayerStatus } from '@/game/Client/types'
 import Spritesheets from '@/game/Models/Player/Spritesheets'
 import { player } from '@/game/Models/Player'
@@ -47,7 +47,7 @@ export default {
 
     onEnemyAttack((id: string) => {
       if (player && intersectionPlayerAttackEnemy(player, enemies[id])) {
-        AttackPlayer(player)
+        ToAttack(player, enemies[id])
       }
     })
   }

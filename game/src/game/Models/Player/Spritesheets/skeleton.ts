@@ -4,8 +4,8 @@ const skeleton: Spritesheet = {
   sprite: 'skeleton',
   info: {
     health: 1000,
-    power: 1,
-    powerArea: 30,
+    power: 200,
+    powerArea: 10,
     speed: 1,
   },
   offsets: {

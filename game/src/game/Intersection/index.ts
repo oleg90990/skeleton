@@ -40,13 +40,11 @@ export function intersectionPlayerEnemy(player: Player, enemy: Player) {
 }
 
 export function intersectionPlayerAttackEnemy(player: Player, enemy: Player) {
-  const c = Phaser
+  return Phaser
     .Geom
     .Intersects
     .GetCircleToCircle(player.area, enemy.areaAttack)
-
-    console.log(c)
-    return false;
+    .length > 0
 }
 
 export default {

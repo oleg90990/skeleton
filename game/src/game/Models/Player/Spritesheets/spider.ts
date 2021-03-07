@@ -4,9 +4,9 @@ const spider: Spritesheet = {
   sprite: 'spider',
   info: {
     health: 800,
-    power: 0.6,
-    powerArea: 20,
-    speed: 1.4,
+    power: 100,
+    powerArea: 40,
+    speed: 1.5,
   },
   offsets: {
     west: 0,

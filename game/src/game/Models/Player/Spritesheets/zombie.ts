@@ -4,8 +4,8 @@ const zombie: Spritesheet = {
   sprite: 'zombie',
   info: {
     health: 2500,
-    power: 0.4,
-    powerArea: 20,
+    power: 300,
+    powerArea: 50,
     speed: 0.7,
   },
   offsets: {

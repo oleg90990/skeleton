@@ -4,9 +4,9 @@ const minotaur: Spritesheet = {
   sprite: 'minotaur',
   info: {
     health: 1500,
-    power: 0.6,
-    powerArea: 10,
-    speed: 1.9,
+    power: 100,
+    powerArea: 20,
+    speed: 0.8,
   },
   offsets: {
     west: 0,
