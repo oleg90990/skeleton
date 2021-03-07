@@ -1,9 +1,9 @@
-import Skeleton from '../Skeleton'
+import Player from '../player'
 import { MotionEnum, DirectionEnum } from '../enums'
 import { PlayerInfo } from '../types'
 
 export default function(
-  player: Skeleton,
+  player: Player,
   x: number,
   y: number,
   moion: MotionEnum,

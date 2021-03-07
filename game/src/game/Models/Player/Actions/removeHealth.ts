@@ -1,4 +1,4 @@
-import Skeleton from '../Skeleton'
+import Player from '../player'
 
-export default function(player: Skeleton) {
+export default function(player: Player) {
 }

@@ -36,3 +36,11 @@ export interface DirectionOffset {
   x: number
   y: number
 }
+
+export interface Spritesheet {
+  sprite: string
+  info: PlayerInfo
+  offsets: DirectionOffsets
+  motions: Motions
+
+}

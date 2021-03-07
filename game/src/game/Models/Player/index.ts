@@ -1,7 +1,9 @@
-import Skeleton from './Skeleton'
+import Player from './player'
 import { ServiceInterface } from '@/game/types'
 import isDown from '@/game/Helpers/isDown'
 import { isDownMouse } from '@/game/Helpers/mousePointer'
+import Spritesheets from './Spritesheets'
+import { getRandomGrass } from '@/game/Map'
 
 //Actions
 import Move from './Actions/move'
@@ -10,12 +12,13 @@ import Attack from './Actions/attack'
 import Idle from './Actions/idle'
 import Direction from './Actions/direction'
 
-export let player: Skeleton | undefined = undefined
+export let player: Player | undefined = undefined
 
 export default {
   execute: function (this: Phaser.Scene) {
+    const grass = getRandomGrass()
     player = this.add.existing(
-      new Skeleton(this)
+      new Player(this, grass.x, grass.y, Spritesheets['minotaur'])
     )
   },
   preload: function (this: Phaser.Scene) {
@@ -23,10 +26,18 @@ export default {
       frameWidth: 128,
       frameHeight: 128,
     })
-    // this.Afewload.spritesheet('zombie', require('@/assets/zombie.png'), {
-    //   frameWidth: 128,
-    //   frameHeight: 128,
-    // })
+    this.load.spritesheet('spider', require('@/assets/spider.png'), {
+      frameWidth: 128,
+      frameHeight: 128,
+    })
+    this.load.spritesheet('zombie', require('@/assets/zombie.png'), {
+      frameWidth: 128,
+      frameHeight: 128,
+    })
+    this.load.spritesheet('minotaur', require('@/assets/minotaur.png'), {
+      frameWidth: 128,
+      frameHeight: 128,
+    })
   },
   update: function (this: Phaser.Scene) {
     if (!player) {

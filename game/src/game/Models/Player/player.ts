@@ -1,40 +1,35 @@
 import { GameObjects, Scene } from 'phaser'
-import { info } from './config'
-import { PlayerInfo, DirectionOffset } from '../types'
-import { MotionEnum, DirectionEnum } from '../enums'
-import Motions from './motions'
-import Directions from './directions'
-import { container } from '@/game/services'
+import { PlayerInfo, DirectionOffset, Spritesheet } from './types'
+import { MotionEnum, DirectionEnum } from './enums'
+import { isIntersectionWater } from '@/game/Intersection'
 
-class Skeleton extends GameObjects.Image {
+class Player extends GameObjects.Image {
+    public directionOffset: DirectionOffset;
     public info: PlayerInfo
     public motionKey: MotionEnum
     public directionKey: DirectionEnum
     private f: number
-    private directionOffset: DirectionOffset;
+    private spritesheet: Spritesheet
 
-    constructor(scene: Scene) {
-        super(scene, -300, 900, 'skeleton')
-
-        this.info = info
+    constructor(scene: Scene, x: number, y: number, spritesheet: Spritesheet) {
+        super(scene, x, y, spritesheet.sprite)
+        this.spritesheet = spritesheet
+        this.info = spritesheet.info
         this.motionKey = MotionEnum.idle
         this.directionKey = DirectionEnum.west
-
         this.f = this.motion.startFrame
-
         this.directionOffset = {
           x: 0, y: 0
         }
-
         this.scene.time.delayedCall(100, this.changeFrame, [], this)
     }
 
     get motion() {
-      return Motions[this.motionKey]
+      return this.spritesheet.motions[this.motionKey]
     }
 
     get direction() {
-      return Directions[this.directionKey]
+      return this.spritesheet.offsets[this.directionKey]
     }
 
     get area() {
@@ -97,10 +92,10 @@ class Skeleton extends GameObjects.Image {
     }
 
     public move() {
-      // if (!isIntersectionMap(this, this.scene as Game)) {
+      if (!isIntersectionWater(this)) {
         this.x += this.directionOffset.x * this.info.speed
         this.y += this.directionOffset.y * this.info.speed
-      // }
+      }
     }
 
     public removeHealth(health: number) {
@@ -120,4 +115,4 @@ class Skeleton extends GameObjects.Image {
     }
 }
 
-export default Skeleton
+export default Player

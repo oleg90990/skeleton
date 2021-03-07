@@ -1,4 +1,8 @@
 export default function (this: Phaser.Scene) {
+    const water: Phaser.Geom.Rectangle[] = [];
+    const grass: Phaser.Geom.Rectangle[] = []
+
+
     const data = this.cache.json.get('map')
 
     const tilewidth = data.tilewidth
@@ -24,24 +28,32 @@ export default function (this: Phaser.Scene) {
             const ty = (x + y) * tileHeightHalf
             const tile = this.add.image(centerX + tx, centerY + ty, 'tiles', id)
 
-            // if ([22, 23].includes(id)) {
-            //   // this.tileIntersects.push(
-            //   //   new Phaser.Geom.Rectangle(
-            //   //     tile.x - 10,
-            //   //     tile.y - 10,
-            //   //     tile.width,
-            //   //     tile.height,
-            //   // ))
-            // }
+            if ([22, 23].includes(id)) {
+              water.push(
+                new Phaser.Geom.Rectangle(
+                  tile.x - 10,
+                  tile.y - 10,
+                  tile.width,
+                  tile.height,
+              ))
+            }
 
-            // if ([1, 2, 3].includes(id)) {
-            //   // this.visitingLands.push({
-            //   //   x: tile.x + tilewidth / 2,
-            //   //   y: tile.y + tileheight / 2,
-            //   // })
-            // }
+            if ([1, 2, 3].includes(id)) {
+              grass.push(
+                new Phaser.Geom.Rectangle(
+                  tile.x - 10,
+                  tile.y - 10,
+                  tile.width,
+                  tile.height,
+              ))
+            }
 
             i++
         }
+    }
+
+    return {
+      water,
+      grass
     }
 }

@@ -13,10 +13,10 @@ export interface ServiceInterface {
 
 export type ServiceGetterInterface = (name: string) => ServiceInterface | undefined
 
-// export interface DirectionPoints {
-//   x: number
-//   y: number
-// }
+export interface Point {
+  x: number
+  y: number
+}
 
 // export interface DirectionItem {
 //   offset: number

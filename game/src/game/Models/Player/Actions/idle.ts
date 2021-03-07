@@ -1,6 +1,6 @@
-import Skeleton from '../Skeleton'
+import Player from '../player'
 import { MotionEnum } from '../enums'
 
-export default function(player: Skeleton) {
+export default function(player: Player) {
   player.setMotion(MotionEnum.idle)
 }
