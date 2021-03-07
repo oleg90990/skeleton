@@ -18,6 +18,7 @@ class Player extends GameObjects.Image {
         this.motionKey = MotionEnum.idle
         this.directionKey = DirectionEnum.west
         this.f = this.motion.startFrame
+        this.depth = 2
         this.directionOffset = {
           x: 0, y: 0
         }

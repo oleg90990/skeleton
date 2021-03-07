@@ -1,4 +1,5 @@
 import Player from '@/game/Models/Player/player'
+import Heart from '@/game/Models/Heart/heart'
 import { waterTiles, grassTiles } from '@/game/Map'
 
 
@@ -20,6 +21,14 @@ export function isIntersectionWater(player: Player) {
   }
 
   return false
+}
+
+export function isIntersectionPlayerHeart(player: Player, heart: Heart) {
+  return Phaser
+    .Geom
+    .Intersects
+    .GetCircleToCircle(player.area, heart.area)
+    .length > 0
 }
 
 export default {

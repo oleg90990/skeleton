@@ -6,7 +6,7 @@ const minotaur: Spritesheet = {
     health: 1500,
     power: 0.6,
     powerArea: 10,
-    speed: 0.9,
+    speed: 1.9,
   },
   offsets: {
     west: 0,

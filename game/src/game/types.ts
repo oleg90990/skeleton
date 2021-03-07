@@ -18,18 +18,13 @@ export interface Point {
   y: number
 }
 
-// export interface DirectionItem {
-//   offset: number
-//   x: number
-//   y: number
-// }
-
-// export interface AnimationItem {
-//   startFrame: number
-//   endFrame: number
-//   once?: boolean
-// }
-
+export interface BonusInterface {
+  id: string,
+  model: string,
+  value: number,
+  x: number,
+  y: number
+}
 
 // export interface EmitResponseInterface {
 //   directionPoints: DirectionPoints
@@ -49,17 +44,4 @@ export interface Point {
 //   y: number
 //   id?: string
 //   info: PlayerInfo
-// }
-
-// export interface AvailableLand {
-//   x: number
-//   y: number
-// }
-
-// export interface Bonus {
-//   id: string,
-//   model: String,
-//   value: number,
-//   x: number,
-//   y: number
 // }

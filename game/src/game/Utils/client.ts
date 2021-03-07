@@ -1,8 +1,6 @@
 // import { EmitResponseInterface, EmitRequestInterface } from '@/game/types'
 import { Socket, io } from "socket.io-client"
-// import Player from '@/game/Models/Player'
-// import Heart from '@/game/Models/Heart'
-// import { Bonus } from '@/game/types'
+import { BonusInterface } from '@/game/types'
 
 /**
  * The Singleton class defines the `getInstance` method that lets clients access
@@ -38,6 +36,14 @@ class Client {
       this.id = this.socket.id
       callback()
     })
+  }
+
+  public on(event: string, callback: Function) {
+    this.socket.on(event, callback)
+  }
+
+  public emit(event: string, callback: any) {
+    this.socket.emit(event, callback)
   }
 
   // private id!: string
@@ -121,4 +127,20 @@ class Client {
 
 export function connect(callback: () => void) {
   Client.getInstance().connect(callback);
+}
+
+export function onBonus(callback: (bonus: BonusInterface) => void) {
+  Client.getInstance().on("bonus", (bonus: BonusInterface) => {
+    callback(bonus)
+  })
+}
+
+export function onRemoveBonus(callback: (id: string) => void) {
+  Client.getInstance().on("removebonus", (id: string) => {
+    callback(id)
+  })
+}
+
+export function emitUseBonus(id: string) {
+  Client.getInstance().emit("removebonus", id)
 }
