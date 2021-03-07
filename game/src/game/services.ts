@@ -5,6 +5,7 @@ import Map from '@/game/Map'
 import Camera from '@/game/Camera'
 import Client from '@/game/Client'
 import Intersection from '@/game/Intersection'
+import ToolBar from '@/game/ToolBar'
 
 //Models
 import Player from '@/game/Models/Player'
@@ -16,7 +17,7 @@ export const container = {
 }
 
 const services: ServiceProviderInterface = {
-  items: [Map, Camera, Client, Player, Intersection, Heart, Enemy]
+  items: [Map, Camera, ToolBar, Client, Player, Intersection, Heart, Enemy]
 }
 
 export default services

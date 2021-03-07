@@ -54,7 +54,7 @@ setInterval(function (argument) {
     x: pos.x,
     y: pos.y,
     model: 'Heart',
-    value: 30
+    value: 100
   })
 }, 2000)
 
