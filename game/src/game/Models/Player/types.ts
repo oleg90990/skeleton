@@ -5,6 +5,7 @@ export interface MotionItem {
   startFrame: number
   endFrame: number
   once?: boolean
+  attack?: number
 }
 
 export interface Motions {

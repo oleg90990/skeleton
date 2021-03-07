@@ -30,6 +30,7 @@ const minotaur: Spritesheet = {
     attack: {
       startFrame: 12,
       endFrame: 18,
+      attack: 16,
     },
     die: {
       startFrame: 21,

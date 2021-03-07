@@ -2,6 +2,7 @@ import { GameObjects, Scene } from 'phaser'
 import { PlayerInfo, DirectionOffset, Spritesheet } from './types'
 import { MotionEnum, DirectionEnum } from './enums'
 import { isIntersectionWater } from '@/game/Intersection'
+import { setAttack } from '@/game/Client'
 
 class Player extends GameObjects.Image {
     public directionOffset: DirectionOffset;
@@ -60,6 +61,12 @@ class Player extends GameObjects.Image {
         }
       } else {
         this.frame = this.texture.get(this.direction + this.f)
+      }
+
+      if (this.motionKey == MotionEnum.attack) {
+        if (this.motion.attack === this.f) {
+          setAttack()
+        }
       }
 
       if (this.scene) {

@@ -30,6 +30,7 @@ const spider: Spritesheet = {
     attack: {
       startFrame: 12,
       endFrame: 20,
+      attack: 16,
     },
     die: {
       startFrame: 20,

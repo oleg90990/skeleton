@@ -30,6 +30,7 @@ const skeleton: Spritesheet = {
     attack: {
       startFrame: 12,
       endFrame: 20,
+      attack: 18,
     },
     die: {
       startFrame: 20,

@@ -1,10 +1,12 @@
-import { onInitEnemy, initPlayer, updateEnemy, disconect, bonuses } from '@/game/Client'
-import Player from '@/game/Models/Player/player'
+import { onInitEnemy, initPlayer, updateEnemy, disconect, bonuses, onEnemyAttack } from '@/game/Client'
+import Enemy from './enemy'
 import setPlayer from '@/game/Models/Player/Actions/set'
+import AttackPlayer from '@/game/Models/Player/Actions/attack'
 import { PlayerStatus } from '@/game/Client/types'
 import Spritesheets from '@/game/Models/Player/Spritesheets'
 import { player } from '@/game/Models/Player'
 import { getBonusesArray } from '@/game/Models/Heart'
+import { intersectionPlayerEnemy, intersectionPlayerAttackEnemy } from '@/game/Intersection'
 
 let enemies: any = {}
 
@@ -13,7 +15,7 @@ export default {
     onInitEnemy((status: PlayerStatus) => {
       if (status.id && !enemies[status.id]) {
         enemies[status.id] = this.add.existing(
-          new Player(this, status.x, status.y, Spritesheets[status.sprite], status.info)
+          new Enemy(this, status.x, status.y, Spritesheets[status.sprite], status.info)
         )
 
         if (player) {
@@ -25,8 +27,14 @@ export default {
 
     updateEnemy((status: PlayerStatus) => {
       if (status.id && enemies[status.id]) {
-        const enemy = enemies[status.id] as Player
+        const enemy = enemies[status.id] as Enemy
+
         setPlayer(enemy, status)
+
+        // if (player) {
+        //   intersectionPlayerEnemy(player, enemy)
+        //   intersectionPlayerAttackEnemy(player, enemy)
+        // }
       }
     })
 
@@ -34,6 +42,12 @@ export default {
       if (enemies[id]) {
         enemies[id].destroy()
         delete enemies[id]
+      }
+    })
+
+    onEnemyAttack((id: string) => {
+      if (player && intersectionPlayerAttackEnemy(player, enemies[id])) {
+        AttackPlayer(player)
       }
     })
   }

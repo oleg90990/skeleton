@@ -31,6 +31,24 @@ export function isIntersectionPlayerHeart(player: Player, heart: Heart) {
     .length > 0
 }
 
+export function intersectionPlayerEnemy(player: Player, enemy: Player) {
+  return Phaser
+    .Geom
+    .Intersects
+    .GetCircleToCircle(player.area, enemy.area)
+    .length > 0
+}
+
+export function intersectionPlayerAttackEnemy(player: Player, enemy: Player) {
+  const c = Phaser
+    .Geom
+    .Intersects
+    .GetCircleToCircle(player.area, enemy.areaAttack)
+
+    console.log(c)
+    return false;
+}
+
 export default {
   update: function(this: Phaser.Scene) {
 

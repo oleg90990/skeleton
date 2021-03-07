@@ -13,6 +13,8 @@ import {
   emitUpdatePlayer,
   onUpdatePlayer,
   onDisconect,
+  attack,
+  onAttack
 } from '@/game/Utils/client'
 
 export function bonus(callback: (bouns: BonusInterface) => void) {
@@ -55,6 +57,14 @@ export function updateEnemy(callback: (status: PlayerStatus) => void) {
 
 export function disconect(callback: (id: string) => void) {
   onDisconect(callback)
+}
+
+export function setAttack() {
+  attack()
+}
+
+export function onEnemyAttack(callback: (id: string) => void) {
+  onAttack(callback)
 }
 
 export default {

@@ -29,6 +29,10 @@ io.on('connection', (socket) => {
     socket.broadcast.emit('updatePlayer', data)
   });
 
+  socket.on('attackPlayer', (data) => {
+    socket.broadcast.emit('attackPlayer', data)
+  });
+
   socket.on('initbonuses', (data) => {
     socket.broadcast.emit('initbonuses', data)
   });
