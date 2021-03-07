@@ -25,23 +25,3 @@ export interface BonusInterface {
   x: number,
   y: number
 }
-
-// export interface EmitResponseInterface {
-//   directionPoints: DirectionPoints
-//   dir: DirectionEnum
-//   motion: AnimsEnum
-//   x: number
-//   y: number
-//   id: string
-//   info: PlayerInfo
-// }
-
-// export interface EmitRequestInterface {
-//   directionPoints: DirectionPoints
-//   dir: DirectionEnum
-//   motion: AnimsEnum
-//   x: number
-//   y: number
-//   id?: string
-//   info: PlayerInfo
-// }

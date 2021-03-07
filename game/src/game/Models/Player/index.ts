@@ -77,9 +77,9 @@ export default {
 
     setStatus(player)
 
-    // // const r = player.area
-    // const a = player.areaAttack
-    // // this.add.circle(r.x, r.y, r.radius, 0xff6699)
+    // // // const r = player.area
+    // const a = player.area
+    // // // this.add.circle(r.x, r.y, r.radius, 0xff6699)
     // this.add.circle(a.x, a.y, a.radius, 0xff66ff)
   },
 }

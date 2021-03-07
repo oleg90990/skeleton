@@ -16,7 +16,7 @@ export default {
       text = this.add.text(
         this.cameras.main.scrollX + 15,
         this.cameras.main.scrollY + 10,
-        `Health: ${player.info.health}`
+        `Health: ${player.info.health <= 0 ? 0 : player.info.health.toFixed(0)}`
       );
     }
   },

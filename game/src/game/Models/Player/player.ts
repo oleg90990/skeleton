@@ -15,7 +15,7 @@ class Player extends GameObjects.Image {
     constructor(scene: Scene, x: number, y: number, spritesheet: Spritesheet, info?: PlayerInfo) {
         super(scene, x, y, spritesheet.sprite)
         this.spritesheet = spritesheet
-        this.info = info ? info : spritesheet.info
+        this.info = info ? info : Object.assign({}, spritesheet.info)
         this.motionKey = MotionEnum.idle
         this.directionKey = DirectionEnum.west
         this.f = this.motion.startFrame
@@ -38,14 +38,14 @@ class Player extends GameObjects.Image {
       return new Phaser.Geom.Circle(
         this.x + 0,
         this.y + 20,
-        30,
+        35,
       )
     }
 
     get areaAttack() {
       return new Phaser.Geom.Circle(
-        this.x + this.directionOffset.x * (20 + this.info.powerArea),
-        this.y + this.directionOffset.y * (20 + this.info.powerArea),
+        this.x + this.directionOffset.x * 20,
+        this.y + this.directionOffset.y * 20,
         this.info.powerArea,
       )
     }
@@ -96,7 +96,7 @@ class Player extends GameObjects.Image {
     }
 
     public setPlayerInfo(info: PlayerInfo) {
-      this.info = info
+      this.info = Object.assign({}, info)
     }
 
     public move() {

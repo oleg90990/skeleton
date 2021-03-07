@@ -10,7 +10,7 @@ export default function(player: Player) {
     player.setPoint(grass.x, grass.y)
     player.setMotion(MotionEnum.idle)
     player.setDirection(DirectionEnum.north)
-    player.setPlayerInfo(Spritesheets['minotaur'].info)
+    player.setPlayerInfo(player.spritesheet.info)
     setStatus(player)
   }
 }
