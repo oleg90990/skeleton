@@ -4,6 +4,7 @@ import isDown from '@/game/Helpers/isDown'
 import { isDownMouse } from '@/game/Helpers/mousePointer'
 import Spritesheets from './Spritesheets'
 import { getRandomGrass } from '@/game/Map'
+import { Sprite } from '@/game/Client/types'
 
 //Actions
 import Move from './Actions/move'
@@ -18,11 +19,11 @@ import { initPlayer, setStatus } from '@/game/Client'
 export let player: Player | undefined = undefined
 
 export default {
-  execute: function (this: Phaser.Scene) {
+  execute: function (this: Phaser.Scene, sprite: Sprite) {
     const grass = getRandomGrass()
 
     player = this.add.existing(
-      new Player(this, grass.x, grass.y, Spritesheets['minotaur'])
+      new Player(this, grass.x, grass.y, Spritesheets[sprite])
     )
 
     initPlayer(player)

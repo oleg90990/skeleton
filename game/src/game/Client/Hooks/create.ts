@@ -3,6 +3,6 @@ import { container } from '@/game/services'
 
 export default function (this: Phaser.Scene) {
   connect(() => {
-    container.Player.execute.apply(this, [])
+    // container.Player.execute.apply(this, [])
   });
 }

@@ -6,11 +6,13 @@
 <script>
   import { Game } from '../game';
   import Phaser from 'phaser'
-  import { ref, onMounted } from 'vue'
+  import { ref, onMounted, onUnmounted } from 'vue'
 
   export default {
     setup() {
       const root = ref(null)
+
+      let game
 
       onMounted(() => {
         const config = {
@@ -22,13 +24,13 @@
           scene: [ Game ]
         };
 
-        new Phaser.Game(config);
+        game = new Phaser.Game(config);
       })
 
-      // onUnmounted(() => {
-      //   console.log()
-      //   game.destroy(true);
-      // })
+      onUnmounted(() => {
+        console.log()
+        game.destroy(true);
+      })
 
       return {
         root

@@ -14,8 +14,8 @@ export default {
     if (player) {
       text.destroy()
       text = this.add.text(
-        this.cameras.main.scrollX,
-        this.cameras.main.scrollY,
+        this.cameras.main.scrollX + 15,
+        this.cameras.main.scrollY + 10,
         `Health: ${player.info.health}`
       );
     }

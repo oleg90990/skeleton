@@ -56,7 +56,7 @@ setInterval(function (argument) {
     model: 'Heart',
     value: 100
   })
-}, 2000)
+}, 10000)
 
 http.listen(3000, () => {
   console.log('listening on *:3000')
