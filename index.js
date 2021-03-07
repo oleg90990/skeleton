@@ -21,12 +21,12 @@ app.get('/', (req, res) => {
 })
 
 io.on('connection', (socket) => {
-  socket.on('emit', (data) => {
-    socket.broadcast.emit('emit', data)
+  socket.on('initPlayer', (data) => {
+    socket.broadcast.emit('initPlayer', data)
   });
 
-  socket.on('init', (data) => {
-    socket.broadcast.emit('init', data)
+  socket.on('updatePlayer', (data) => {
+    socket.broadcast.emit('updatePlayer', data)
   });
 
   socket.on('initbonuses', (data) => {

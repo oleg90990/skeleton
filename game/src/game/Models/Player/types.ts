@@ -1,4 +1,5 @@
 import { DirectionEnum, MotionEnum } from './enums'
+import { Sprite } from '@/game/Client/types'
 
 export interface MotionItem {
   startFrame: number
@@ -38,9 +39,8 @@ export interface DirectionOffset {
 }
 
 export interface Spritesheet {
-  sprite: string
+  sprite: Sprite
   info: PlayerInfo
   offsets: DirectionOffsets
   motions: Motions
-
 }

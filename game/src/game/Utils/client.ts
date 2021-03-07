@@ -1,6 +1,7 @@
 // import { EmitResponseInterface, EmitRequestInterface } from '@/game/types'
 import { Socket, io } from "socket.io-client"
 import { BonusInterface } from '@/game/types'
+import { PlayerStatus } from '@/game/Client/types'
 
 /**
  * The Singleton class defines the `getInstance` method that lets clients access
@@ -8,7 +9,7 @@ import { BonusInterface } from '@/game/types'
  */
 class Client {
   private static instance: Client
-  private id!: string
+  public id!: string
   private socket!: Socket;
 
   private constructor() { }
@@ -129,6 +130,38 @@ export function connect(callback: () => void) {
   Client.getInstance().connect(callback);
 }
 
+//Player
+
+export function emitInitPlayer(status: PlayerStatus) {
+  status.id = Client.getInstance().id
+  Client.getInstance().emit("initPlayer", status)
+}
+
+export function onInitPlayer(callback: (status: PlayerStatus) => void) {
+  Client.getInstance().on("initPlayer", (status: PlayerStatus) => {
+   callback(status)
+  })
+}
+
+export function emitUpdatePlayer(status: PlayerStatus) {
+  status.id = Client.getInstance().id
+  Client.getInstance().emit('updatePlayer', status)
+}
+
+export function onUpdatePlayer(callback: (status: PlayerStatus) => void) {
+  Client.getInstance().on("updatePlayer", (status: PlayerStatus) => {
+   callback(status)
+  })
+}
+
+export function onDisconect(callback: (id: string) => void) {
+   Client.getInstance().on("disconectitem", (id: string) => {
+    callback(id)
+  })
+}
+
+//Bouns
+
 export function onBonus(callback: (bonus: BonusInterface) => void) {
   Client.getInstance().on("bonus", (bonus: BonusInterface) => {
     callback(bonus)
@@ -143,4 +176,12 @@ export function onRemoveBonus(callback: (id: string) => void) {
 
 export function emitUseBonus(id: string) {
   Client.getInstance().emit("removebonus", id)
+}
+
+export function initBonuses(bonuses: BonusInterface[]) {
+  Client.getInstance().emit("initbonuses", bonuses)
+}
+
+export function onBonuses(callback: (bonuses: BonusInterface[]) => void) {
+  Client.getInstance().on("initbonuses", callback)
 }

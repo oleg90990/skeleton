@@ -8,13 +8,13 @@ class Player extends GameObjects.Image {
     public info: PlayerInfo
     public motionKey: MotionEnum
     public directionKey: DirectionEnum
-    private f: number
-    private spritesheet: Spritesheet
+    public f: number
+    public spritesheet: Spritesheet
 
-    constructor(scene: Scene, x: number, y: number, spritesheet: Spritesheet) {
+    constructor(scene: Scene, x: number, y: number, spritesheet: Spritesheet, info?: PlayerInfo) {
         super(scene, x, y, spritesheet.sprite)
         this.spritesheet = spritesheet
-        this.info = spritesheet.info
+        this.info = info ? info : spritesheet.info
         this.motionKey = MotionEnum.idle
         this.directionKey = DirectionEnum.west
         this.f = this.motion.startFrame

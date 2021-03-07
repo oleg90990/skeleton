@@ -9,13 +9,14 @@ import Intersection from '@/game/Intersection'
 //Models
 import Player from '@/game/Models/Player'
 import Heart from '@/game/Models/Heart'
+import Enemy from '@/game/Models/Enemy'
 
 export const container = {
   Map, Camera, Client, Player
 }
 
 const services: ServiceProviderInterface = {
-  items: [Map, Camera, Client, Player, Intersection, Heart]
+  items: [Map, Camera, Client, Player, Intersection, Heart, Enemy]
 }
 
 export default services

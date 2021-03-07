@@ -12,14 +12,20 @@ import Attack from './Actions/attack'
 import Idle from './Actions/idle'
 import Direction from './Actions/direction'
 
+//Client
+import { initPlayer, setStatus } from '@/game/Client'
+
 export let player: Player | undefined = undefined
 
 export default {
   execute: function (this: Phaser.Scene) {
     const grass = getRandomGrass()
+
     player = this.add.existing(
       new Player(this, grass.x, grass.y, Spritesheets['minotaur'])
     )
+
+    initPlayer(player)
   },
   preload: function (this: Phaser.Scene) {
     this.load.spritesheet('skeleton', require('@/assets/skeleton.png'), {
@@ -67,5 +73,7 @@ export default {
     if (!isDownMouse(this) && !isDown(this, 'SPACE')) {
       Idle(player)
     }
+
+    setStatus(player)
   },
 }
