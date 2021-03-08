@@ -17,6 +17,8 @@ import Direction from './Actions/direction'
 import { initPlayer, setStatus } from '@/game/Client'
 
 export let player: Player | undefined = undefined
+const delay = 30
+let prevTime = 0
 
 export default {
   execute: function (this: Phaser.Scene, sprite: Sprite) {
@@ -51,6 +53,11 @@ export default {
       return
     }
 
+    if (this.time.now > prevTime + delay) {
+      setStatus(player)
+      prevTime = this.time.now
+    }
+
     if (isDown(this, 'R') && player.isDie()) {
         Reset(player)
     }
@@ -74,8 +81,6 @@ export default {
     if (!isDownMouse(this) && !isDown(this, 'SPACE')) {
       Idle(player)
     }
-
-    setStatus(player)
 
     // // // const r = player.area
     // const a = player.area
